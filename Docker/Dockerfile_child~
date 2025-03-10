@@ -1,0 +1,2 @@
+FROM health_image
+RUN echo "Building from ONBUILD image"

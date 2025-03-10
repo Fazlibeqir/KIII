@@ -1,0 +1,12 @@
+FROM ubuntu:20.04
+LABEL maintainer="fazlibeqir@gmail.com"
+
+SHELL ["/bin/bash","-c"]
+
+RUN apt-get update && apt-get install -y curl
+
+HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
+	CMD curl -f http://localhost || exit 1
+ONBUILD RUN echo "This command runs when another image is built fomr this one."
+
+CMD ["bash"]
