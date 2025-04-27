@@ -1,1 +1,7 @@
 venv
+
+Jenkins/*
+!Jenkins/Dockerfile
+!Jenkins/docker-compose.yml
+!Jenkins/Jenkins.odt
+!Jenkins/Jenkins.pdf

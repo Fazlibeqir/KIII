@@ -1,0 +1,27 @@
+services:
+  docker:
+    image: docker:dind
+    privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      - ./jenkins-docker-certs:/certs/client
+      - ./jenkins-data:/var/jenkins_home
+
+  jenkins-blueocean:
+    build: .
+    user: root
+    environment:
+      - DOCKER_HOST:tcp://docker:2376
+      - DOCKER_TLS_VERIFY=0
+      - DOCKER_CERT_PATH=/certs/client
+    ports:
+      - 9090:8080
+      - 50000:50000
+    volumes:
+      - ./jenkins-data:/var/jenkins_home
+      - /jenkins-docker-certs:/certs/client:ro
+networks:
+  jenkins:
+    name: jenkins
+    driver: bridge
