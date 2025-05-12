@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-static-pod
+spec:
+  containers:
+    - name: nginx
+      image: redbfs/nginx-static:latest
+      ports:
+        - containerPort: 80
