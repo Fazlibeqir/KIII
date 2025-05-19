@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: static-site-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: default-strip-ver1@kubernetescrd,default-strip-ver2@kubernetescrd
+spec:
+  rules:
+    - host: localhost
+      http:
+        paths:
+          - path: /ver1
+            pathType: Prefix
+            backend:
+              service:
+                name: static-site-ver1-service
+                port:
+                  number: 80
+          - path: /ver2
+            pathType: Prefix
+            backend:
+              service:
+                name: static-site-ver2-service
+                port:
+                  number: 80

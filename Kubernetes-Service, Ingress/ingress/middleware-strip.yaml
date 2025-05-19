@@ -1,0 +1,19 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-ver1
+  namespace: default
+spec:
+  stripPrefix:
+    prefixes:
+      - /ver1
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-ver2
+  namespace: default
+spec:
+  stripPrefix:
+    prefixes:
+      - /ver2

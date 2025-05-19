@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-site-ver2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: static-site
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: static-site
+        version: v2
+    spec:
+      containers:
+      - name: nginx
+        image: redbfs/static-site:2.0
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-site-ver2-service
+spec:
+  selector:
+    app: static-site
+    version: v2
+  ports:
+  - port: 80
+    targetPort: 80
