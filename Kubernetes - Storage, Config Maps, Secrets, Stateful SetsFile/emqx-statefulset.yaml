@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: emqx
+  namespace: emqx
+spec:
+  serviceName: emqx-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: emqx
+  template:
+    metadata:
+      labels:
+        app: emqx
+    spec:
+      containers:
+      - name: emqx
+        image: emqx/emqx:5.0.25
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: EMQX_NODE__NAME
+          value: "emqx@$(POD_NAME).emqx-headless.emqx.svc.cluster.local"
+        - name: EMQX_CLUSTER__DISCOVERY_STRATEGY
+          value: "static"
+        - name: EMQX_CLUSTER__STATIC__SEEDS
+          valueFrom:
+            configMapKeyRef:
+              name: emqx-config
+              key: EMQX_CLUSTER__STATIC__SEEDS
+        - name: EMQX_NODE__COOKIE
+          value: "secretcookie"
+        ports:
+        - containerPort: 1883
+        - containerPort: 18083
+        volumeMounts:
+        - name: emqx-data
+          mountPath: /opt/emqx/data
+      volumes:
+      - name: emqx-data
+        persistentVolumeClaim:
+          claimName: emqx-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: emqx-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
